@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { gql } from "apollo-boost";
 import { useQuery } from "@apollo/client";
 import styled from "styled-components";
+import Movie from "../components/Movie";
 
 const GET_MOVIE = gql`
 	query getMovie($id: Int!) {
@@ -13,6 +14,10 @@ const GET_MOVIE = gql`
 			rating
 			medium_cover_image
 			description_intro
+		}
+		getSuggestions(id: $id) {
+			id
+			medium_cover_image
 		}
 	}
 `;
@@ -59,6 +64,7 @@ function Detail() {
 	const { loading, data } = useQuery(GET_MOVIE, {
 		variables: { id: Number(id) },
 	});
+	data && console.log(data);
 	return (
 		<Container>
 			<Column>
@@ -69,6 +75,9 @@ function Detail() {
 				<Description>{data?.getMovie?.description_intro}</Description>
 			</Column>
 			<Poster bg={data?.getMovie?.medium_cover_image}></Poster>
+			{/* {data?.getSuggestions?.map((m) => (
+				<Movie key={m.id} id={m.id} bg={m.medium_cover_image} />
+			))} */}
 		</Container>
 	);
 }
