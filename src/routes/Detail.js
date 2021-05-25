@@ -3,17 +3,18 @@ import { useParams } from "react-router-dom";
 import { gql } from "apollo-boost";
 import { useQuery } from "@apollo/client";
 import styled from "styled-components";
-import Movie from "../components/Movie";
 
 const GET_MOVIE = gql`
 	query getMovie($id: Int!) {
 		getMovie(id: $id) {
+			id
 			title
 			rating
 			language
 			rating
 			medium_cover_image
 			description_intro
+			isLiked @client
 		}
 		getSuggestions(id: $id) {
 			id
@@ -68,7 +69,11 @@ function Detail() {
 	return (
 		<Container>
 			<Column>
-				<Title>{loading && "Loading..."}</Title>
+				<Title>
+					{loading
+						? "Loading..."
+						: `${data.getMovie.title} ${data.getMovie.isLiked ? "👍" : null}`}
+				</Title>
 				<Subtitle>
 					{data?.getMovie?.language} · {data?.getMovie?.rating}
 				</Subtitle>
